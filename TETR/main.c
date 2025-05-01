@@ -51,7 +51,8 @@ typedef struct {
     ShapeId queue[4];
 }State;
 
-Shape{
+Shape shape[7] = {
+    // I, O, J, L, S, T, Z
     {
         .shape = I,
         .color = CYAN,
@@ -85,9 +86,9 @@ Shape{
         
     
     },{
-        .shape = 0;
-            .color = WHITE;
-            .size = 2;
+        .shape = 0,
+            .color = WHITE,
+            .size = 2,
             .rotates = {
                 {
                     {1,1},
@@ -105,22 +106,60 @@ Shape{
                 }
             }
     },{
-        .shape = J;
-        .color = BLUE;
-        .size = 3;
+        .shape = J,
+        .color = BLUE,
+        .size = 3,
         .rotates = {
             {
-
+                {
+                    {1,0,0},
+                    {1,1,1},
+                    {0,0,0},
+                },
+                {
+                    {0,1,1},
+                    {0,1,0},
+                    {0,1,0},
+                },
+                {
+                    {0,0,0},
+                    {1,1,1},
+                    {0,0,1},
+                },
+                {
+                    {0,1,0},
+                    {0,1,0},
+                    {1,1,0},
+                }
             }
         }
     },{
-        .shape = L;
-        .color = YELLOW;
-        .size = 3;
+        .shape = L,
+        .color = YELLOW,
+        .size = 3,
         .rotates = {
+            
             {
-
+                {0,0,1},
+                {1,1,1},
+                {0,0,0},
+            },
+            {
+                {0,1,0},
+                {0,1,0},
+                {0,1,1},
+            },
+            {
+                {0,0,0},
+                {1,1,1},
+                {1,0,0},
+            },
+            {
+                {1,1,0},
+                {0,1,0},
+                {0,1,0},
             }
+            
         }
     },{
         .shape = S,
@@ -128,29 +167,81 @@ Shape{
 		.size = 3,
         .rotates = {
             {
-
+                {
+				{0,1,1},
+				{1,1,0},
+				{0,0,0},
+			},
+			{
+				{0,1,0},
+				{0,1,1},
+				{0,0,1},
+			},
+			{
+				{0,0,0},
+				{0,1,1},
+				{1,1,0},
+			},
+			{
+				{1,0,0},
+				{1,1,0},
+				{0,1,0},
+			}
             }
         }
     },{
-        .shape = T;
-        .color = PURPLE;
-        .size = 3;
+        .shape = T,
+        .color = PURPLE,
+        .size = 3,
         .rotates = {
             {
-
-            }
+				{0,1,0},
+				{1,1,1},
+				{0,0,0},
+			},
+			{
+				{0,1,0},
+				{0,1,1},
+				{0,1,0},
+			},
+			{
+				{0,0,0},
+				{1,1,1},
+				{0,1,0},
+			},
+			{
+				{0,1,0},
+				{1,1,0},
+				{0,1,0},
+			}
         }
     },{
-        .shape = Z;
-        .color = RED;
-        .size = 3;
+        .shape = Z,
+        .color = RED,
+        .size = 3,
         .rotates = {
             {
-
-            }
+				{1,1,0},
+				{0,1,1},
+				{0,0,0},
+			},
+			{
+				{0,0,1},
+				{0,1,1},
+				{0,1,0},
+			},
+			{
+				{0,0,0},
+				{1,1,0},
+				{0,1,1},
+			},
+			{
+				{0,1,0},
+				{1,1,0},
+				{1,0,0},
+			}
         }
     }
-    12345
 
 
 }
@@ -190,10 +281,11 @@ int main() {
     for(int i = 0; i<CANVAS_HEIGHT; i ++){
         for(int j = 0; j < CANVAS_WIDTH; j ++){
             if(shapeData.rotate[i][j] == 1) 
-            setBlock(&canvas[state.y +　][state.y]);
+            setBlock(&canvas[state.y + i][state.x + j], shapeData.color, shapeData.shape, true);
         }
     }
     
+    printf("\033[O;OH\n");
     for(int i = 0; i<CANVAS_HEIGHT; i ++){
         printf("|");
         for(int j = 0; j < CANVAS_WIDTH; j ++){
@@ -202,7 +294,7 @@ int main() {
         }printf("\n");
     }
     
-    
+    return 0;
     
     
     
