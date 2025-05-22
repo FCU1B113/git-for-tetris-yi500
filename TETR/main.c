@@ -7,6 +7,22 @@
 #define CANVAS_WIDTH 10
 #define CANVAS_HEIGHT 20
 
+#define FALL_DELAY 500
+#define RENDER_DELAY 100
+
+// 鍵盤對照表
+#define LEFT_KEY 0x25
+#define RIGHT_KEY 0x27 
+#define ROTATE_KEY 0x26 
+#define DOWN_KEY 0x28 
+#define FALL_KEY 0x20 
+
+// 判斷按鍵是否有被按下的函式
+#define LEFT_FUNC() GetAsyncKeyState(LEFT_KEY) & 0x8000
+#define RIGHT_FUNC() GetAsyncKeyState(RIGHT_KEY) & 0x8000
+#define ROTATE_FUNC() GetAsyncKeyState(ROTATE_KEY) & 0x8000
+#define DOWN_FUNC() GetAsyncKeyState(DOWN_KEY) & 0x8000
+#define FALL_FUNC() GetAsyncKeyState(FALL_KEY) & 0x8000
 
 typedef enum {
     RED = 41,
@@ -16,7 +32,7 @@ typedef enum {
     PURPLE,
     CYAN,
     WHITE,
-    BLACK = 0,
+    BLACK = 0
 }Color;
 
 typedef enum {
@@ -38,6 +54,16 @@ typedef struct {
     char rotates[4][4][4];
 }Shape;
 
+typedef struct
+{
+    int x;
+    int y;
+    int score;
+    int rotate;
+    int fallTime;
+    ShapeId queue[4];
+} State;
+
 typedef struct {
     Color color;
     ShapeId shape;
@@ -57,39 +83,35 @@ Shape shapes[7] = {
                 {0,0,0,0},
                 {1,1,1,1},
                 {0,0,0,0},
-                {0,0,0,0},
-            },
-            {
+                {0,0,0,0}
+            },{
                 {0,0,1,0},
                 {0,0,1,0},
                 {0,0,1,0},
-                {0,0,1,0},
-            },
-            {
+                {0,0,1,0}
+            },{
                 {0,0,0,0},
                 {0,0,0,0},
                 {1,1,1,1},
-                {0,0,0,0},
-            },
-            {
+                {0,0,0,0}
+            },{
                 {0,1,0,0},
                 {0,1,0,0},
                 {0,1,0,0},
-                {0,1,0,0},
+                {0,1,0,0}
             }
         }
         
     
     },{
-        .shape = 0,
+        .shape = O,
             .color = WHITE,
             .size = 2,
             .rotates = {
                 {
                     {1,1},
                     {1,1}
-                },
-                {
+                },{
                     {1,1},
                     {1,1}
                 },{
@@ -108,22 +130,19 @@ Shape shapes[7] = {
             {
                 {1,0,0},
                 {1,1,1},
-                {0,0,0},
-            },
-            {
+                {0,0,0}
+            },{
                 {0,1,1},
                 {0,1,0},
-                {0,1,0},
-            },
-            {
+                {0,1,0}
+            },{
                 {0,0,0},
                 {1,1,1},
-                {0,0,1},
-            },
-            {
+                {0,0,1}
+            },{
                 {0,1,0},
                 {0,1,0},
-                {1,1,0},
+                {1,1,0}
             }
         }
         
@@ -136,22 +155,19 @@ Shape shapes[7] = {
             {
                 {0,0,1},
                 {1,1,1},
-                {0,0,0},
-            },
-            {
+                {0,0,0}
+            },{
                 {0,1,0},
                 {0,1,0},
-                {0,1,1},
-            },
-            {
+                {0,1,1}
+            },{
                 {0,0,0},
                 {1,1,1},
-                {1,0,0},
-            },
-            {
+                {1,0,0}
+            },{
                 {1,1,0},
                 {0,1,0},
-                {0,1,0},
+                {0,1,0}
             }
             
         }
@@ -164,22 +180,19 @@ Shape shapes[7] = {
             {
 				{0,1,1},
 				{1,1,0},
-				{0,0,0},
-			},
-			{
+				{0,0,0}
+			},{
 				{0,1,0},
 				{0,1,1},
-				{0,0,1},
-			},
-			{
+				{0,0,1}
+			},{
 				{0,0,0},
 				{0,1,1},
-				{1,1,0},
-			},
-			{
+				{1,1,0}
+			},{
 				{1,0,0},
 				{1,1,0},
-				{0,1,0},
+				{0,1,0}
 			}
             
         }
@@ -191,22 +204,19 @@ Shape shapes[7] = {
             {
 				{0,1,0},
 				{1,1,1},
-				{0,0,0},
-			},
-			{
+				{0,0,0}
+			},{
 				{0,1,0},
 				{0,1,1},
-				{0,1,0},
-			},
-			{
+				{0,1,0}
+			},{
 				{0,0,0},
 				{1,1,1},
-				{0,1,0},
-			},
-			{
+				{0,1,0}
+			},{
 				{0,1,0},
 				{1,1,0},
-				{0,1,0},
+				{0,1,0}
 			}
         }
     },{
@@ -217,31 +227,28 @@ Shape shapes[7] = {
             {
 				{1,1,0},
 				{0,1,1},
-				{0,0,0},
-			},
-			{
+				{0,0,0}
+			},{
 				{0,0,1},
 				{0,1,1},
-				{0,1,0},
-			},
-			{
+				{0,1,0}
+			},{
 				{0,0,0},
 				{1,1,0},
-				{0,1,1},
-			},
-			{
+				{0,1,1}
+			},{
 				{0,1,0},
 				{1,1,0},
-				{1,0,0},
+				{1,0,0}
 			}
         }
     }
 
 
-}
+};
 
 
-void setBlock(Block *block, Color color, ShapeId shape, bool current)
+void setBlock(Block* block, Color color, ShapeId shape, bool current)
 {
     block->color = color;
     block->shape = shape;
@@ -256,8 +263,7 @@ void resetBlock(Block *block)
 }
 
 
-void printCanvas(Block canvas[CANVAS_HEIGHT][CANVAS_WIDTH], State *state)
-{
+void printCanvas(Block canvas[CANVAS_HEIGHT][CANVAS_WIDTH], State *state){
     printf("\033[0;0H\n");
     for (int i = 0; i < CANVAS_HEIGHT; i++)
     {
@@ -272,8 +278,7 @@ void printCanvas(Block canvas[CANVAS_HEIGHT][CANVAS_WIDTH], State *state)
     // 輸出Next:
     printf("\033[%d;%dHNext:", 3, CANVAS_WIDTH * 2 + 5);
     // 輸出有甚麼方塊
-    for (int i = 1; i <= 3; i++)
-    {
+    for (int i = 1; i <= 3; i++){
         Shape shapeData = shapes[state->queue[i]];
         for (int j = 0; j < 4; j++)
         {
@@ -301,8 +306,7 @@ bool move(Block canvas[CANVAS_HEIGHT][CANVAS_WIDTH], int originalX, int original
     int size = shapeData.size;
 
     // 判斷方塊有沒有不符合條件
-    for (int i = 0; i < size; i++)
-    {
+    for (int i = 0; i < size; i++){
         for (int j = 0; j < size; j++)
         {
             if (shapeData.rotates[newRotate][i][j])
@@ -322,8 +326,7 @@ bool move(Block canvas[CANVAS_HEIGHT][CANVAS_WIDTH], int originalX, int original
     }
 
     // 移除方塊舊的位置
-    for (int i = 0; i < size; i++)
-    {
+    for (int i = 0; i < size; i++){
         for (int j = 0; j < size; j++)
         {
             if (shapeData.rotates[originalRotate][i][j])
@@ -348,14 +351,52 @@ bool move(Block canvas[CANVAS_HEIGHT][CANVAS_WIDTH], int originalX, int original
     return true;
 }
 
+int clearLine(Block canvas[CANVAS_HEIGHT][CANVAS_WIDTH])
+{
+    for (int i = 0; i < CANVAS_HEIGHT; i++)
+    {
+        for (int j = 0; j < CANVAS_WIDTH; j++)
+        {
+            if (canvas[i][j].current)
+            {
+                canvas[i][j].current = false;
+            }
+        }
+    }
+
+    int linesCleared = 0;
+    for (int i = CANVAS_HEIGHT - 1; i >= 0; i--)
+    {
+        bool isFull = true;
+        for (int j = 0; j < CANVAS_WIDTH; j++)
+        {
+            if (canvas[i][j].shape == EMPTY) {
+                isFull = false;
+                break;
+            }
+        }
+        if (isFull) {
+            linesCleared += 1;
+
+            for (int j = i; j > 0; j--)
+            {
+                for (int k = 0; k < CANVAS_WIDTH; k++)
+                {
+                    setBlock(&canvas[j][k], canvas[j - 1][k].color, canvas[j - 1][k].shape, false);
+                    resetBlock(&canvas[j - 1][k]);
+                }
+            }
+            i++;
+        }
+    }     
+    return linesCleared;
+}
+
 void logic(Block canvas[CANVAS_HEIGHT][CANVAS_WIDTH], State *state)
 {
-    if (move(canvas, state->x, state->y, state->rotate, state->x, state->y + 1, state->rotate, state->queue[0]))
-    {
+    if (move(canvas, state->x, state->y, state->rotate, state->x, state->y + 1, state->rotate, state->queue[0])){
         state->y++;
-    }
-    else
-    {
+    }else{
         state->score += clearLine(canvas);
 
         state->x = CANVAS_WIDTH / 2;
@@ -375,14 +416,17 @@ void logic(Block canvas[CANVAS_HEIGHT][CANVAS_WIDTH], State *state)
 
 int main() {
     State state = {
-        .x =  CANVAS_WIDTH / 2
-        .y = 0;
-        .score = 0;
-        .rotate = 0;
-        .fallTime = 0;
-    
-        ShapeId queue[4];
+        .x =  CANVAS_WIDTH / 2,
+        .y = 0,
+        .score = 0,
+        .rotate = 0,
+        .fallTime = 0
     };
+
+    for (int i = 0; i < 4; i++)
+    {
+        state.queue[i] = rand() % 7;
+    }
 
 
     Block canvas[CANVAS_HEIGHT][CANVAS_WIDTH];
